@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.Attributes exposing (attribute)
 import Html.App as App
 import Http
 import Task
@@ -109,16 +110,45 @@ view : Model -> Html Msg
 view model =
     case model of
         [] ->
-            div [] [ text "No logs exist." ]
+            div
+                []
+                [ text "No logs exist." ]
 
         _ ->
-            ul []
-                (List.map listItem model)
+            [ viewHeader
+                [ ul
+                    []
+                    (List.map listItem model)
+                ]
+            ]
 
 
 listItem : Log -> Html msg
 listItem l =
     li [] [ span [] [ text (toString l) ] ]
+
+
+viewHeader : Html msg
+viewHeader =
+    table [ attribute "class" "ui celled striped table" ]
+        [ thead []
+            [ tr []
+                [ th [ attribute "class" "collapsing" ]
+                    [ text "Logged At" ]
+                , th [ attribute "class" "collapsing" ]
+                    [ text "Level" ]
+                , th [ attribute "class" "collapsing" ]
+                    [ text "Application" ]
+                , th [ attribute "class" "collapsing" ]
+                    [ text "Tags" ]
+                , th []
+                    [ text "Message" ]
+                , th [ attribute "class" "collapsing" ]
+                    []
+                , text "      "
+                ]
+            ]
+        ]
 
 
 
