@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (attribute)
+import Html.Attributes exposing (attribute, class, href)
 import Html.App as App
 import Http
 import Task
@@ -16,7 +16,6 @@ type alias Response =
 responseDecoder : Decoder (List Log)
 responseDecoder =
     list logDecoder
-
 
 
 -- responseDecoder : Decoder Response
@@ -43,7 +42,9 @@ fetchLogs : Cmd Msg
 fetchLogs =
     let
         url =
-            "http://localhost:9000/logs"
+            --"http://ekmlogger.ekmpowershop.com"
+            "http://localhost:49851/logs"
+            --"http://localhost:9000/logs"
 
         task =
             -- Http.getString url
@@ -58,7 +59,6 @@ fetchLogs =
 
 -- model
 
-
 type alias Log =
     { id : String
     , application : String
@@ -70,12 +70,16 @@ type alias Log =
 
 
 type alias Model =
-    List Log
+  { error : Maybe String
+  , logs : List Log
+  }
 
 
 initModel : Model
 initModel =
-    []
+    { error = Nothing
+    , logs = []
+    }
 
 
 init : ( Model, Cmd Msg )
@@ -83,78 +87,86 @@ init =
     ( initModel, fetchLogs )
 
 
-
--- update
-
-
 type Msg
     = Logs Response
     | Fail Http.Error
 
 
+-- update
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Logs response ->
-            ( response, Cmd.none )
+            ( { model | logs = response }, Cmd.none )
 
         Fail error ->
-            ( [], Cmd.none )
-
-
+            ( { model | error = Just (toString error) }, Cmd.none )
 
 -- view
-
-
 view : Model -> Html Msg
 view model =
-    case model of
-        [] ->
-            div
-                []
-                [ text "No logs exist." ]
-
+    case model.error of
+        Nothing ->
+          logsView
+            model.logs
         _ ->
-            [ viewHeader
-                [ ul
+          div [] [
+            div
+              []
+              [ text (Maybe.withDefault "" model.error) ]
+          ]
+
+tableItem : Log -> Html msg
+tableItem log =
+    tr []
+            [ td [ class "collapsing" ]
+                [ text log.created_at ]
+            , td [ class "center aligned collapsing" ]
+                [ i [ class "green spy icon" ]
                     []
-                    (List.map listItem model)
+                ]
+            , td [ class "collapsing" ]
+                [ text log.application ]
+            , td [ class "center aligned collapsing" ]
+                [ button [ class "ui mini blue label" ]
+                    [ text "sqlite" ]
+                , button [ class "ui mini blue label" ]
+                    [ text "query" ]
+                ]
+            , td []
+                [ text log.message ]
+            , td [ class "collapsing" ]
+                [ a [ class "ui mini primary button", href "#/logs/5800e3e2edad930d286ec7b5" ]
+                    [ text "Details" ]
                 ]
             ]
 
 
-listItem : Log -> Html msg
-listItem l =
-    li [] [ span [] [ text (toString l) ] ]
-
-
-viewHeader : Html msg
-viewHeader =
-    table [ attribute "class" "ui celled striped table" ]
+logsView : List Log -> Html msg
+logsView logs =
+    table [ class "ui celled striped table" ]
         [ thead []
             [ tr []
-                [ th [ attribute "class" "collapsing" ]
+                [ th [ class "collapsing" ]
                     [ text "Logged At" ]
-                , th [ attribute "class" "collapsing" ]
+                , th [ class "collapsing" ]
                     [ text "Level" ]
-                , th [ attribute "class" "collapsing" ]
+                , th [ class "collapsing" ]
                     [ text "Application" ]
-                , th [ attribute "class" "collapsing" ]
+                , th [ class "collapsing" ]
                     [ text "Tags" ]
                 , th []
                     [ text "Message" ]
-                , th [ attribute "class" "collapsing" ]
+                , th [ class "collapsing" ]
                     []
                 , text "      "
                 ]
             ]
+            , tbody []
+                (List.map (\l -> tableItem l) logs)
         ]
 
-
-
--- subscription
-
-
+-- subscriptions
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
