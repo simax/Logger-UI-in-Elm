@@ -11,20 +11,11 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 
 type alias Response =
     List Log
-
+ 
 
 responseDecoder : Decoder (List Log)
 responseDecoder =
     list logDecoder
-
-
--- responseDecoder : Decoder Response
--- responseDecoder =
---     object3 Response
---         ("id" := int)
---         ("joke" := string)
---         ("categories" := list string)
---         |> at [ "value" ]
 
 
 logDecoder : Decoder Log
