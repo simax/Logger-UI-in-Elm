@@ -129,18 +129,20 @@ tableItem log =
         , td [ class "collapsing" ]
             [ text log.application ]
         , td [ class "center aligned collapsing" ]
-            [ button [ class "ui mini blue label" ]
-                [ text "sqlite" ]
-            , button [ class "ui mini blue label" ]
-                [ text "query" ]
-            ]
+            (List.map (\t -> tagButton t) log.tags)
         , td []
             [ text log.message ]
         , td [ class "collapsing" ]
-            [ a [ class "ui mini primary button", href "#/logs/5800e3e2edad930d286ec7b5" ]
+            [ a [ class "ui mini primary button", href ("#/logs/" ++ (toString log.id)) ]
                 [ text "Details" ]
             ]
         ]
+
+
+tagButton : String -> Html msg
+tagButton t =
+    button [ class "ui mini blue label" ]
+        [ text t ]
 
 
 logsView : List Log -> Html msg
