@@ -9,6 +9,15 @@ import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
+--"http://ekmlogger.ekmpowershop.com"
+-- "http://localhost:49851/logs"
+
+
+serverAPI : String
+serverAPI =
+    "http://localhost:9000/logs"
+
+
 type alias Response =
     List Log
 
@@ -29,14 +38,9 @@ logDecoder =
         |> required "created_at" string
 
 
-fetchLogs : Cmd Msg
-fetchLogs =
+fetchLogs : String -> Cmd Msg
+fetchLogs url =
     let
-        url =
-            --"http://ekmlogger.ekmpowershop.com"
-            -- "http://localhost:49851/logs"
-            "http://localhost:9000/logs"
-
         task =
             -- Http.getString url
             Http.get responseDecoder url
@@ -76,7 +80,7 @@ initModel =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initModel, fetchLogs )
+    ( initModel, (fetchLogs serverAPI) )
 
 
 type Msg
@@ -120,7 +124,9 @@ view model =
             viewSiteWrapper
                 (div
                     []
-                    [ text (Maybe.withDefault "" model.error) ]
+                    [ logViewPageHeader
+                    , div [ class "ui middle message aligned center aligned grid error" ] [ text ("Houston, we have a problem: " ++ (Maybe.withDefault "" model.error) ++ " has occured.") ]
+                    ]
                 )
 
 
