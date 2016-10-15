@@ -106,24 +106,40 @@ view : Model -> Html Msg
 view model =
     case model.error of
         Nothing ->
-            div []
-                [ logViewPageHeader
-                , logFilters
-                , logsView
-                    model.logs
-                ]
+            viewSiteWrapper
+                (div
+                    []
+                    [ logViewPageHeader
+                    , logFilters
+                    , logsView
+                        model.logs
+                    ]
+                )
 
         _ ->
-            div []
-                [ logViewPageHeader
-                , logFilters
-                , div
+            viewSiteWrapper
+                (div
                     []
                     [ text (Maybe.withDefault "" model.error) ]
+                )
+
+
+viewSiteWrapper : Html Msg -> Html Msg
+viewSiteWrapper contents =
+    div [ class "ui grid" ]
+        [ div [ class "padded column" ]
+            [ div []
+                [ div
+                    [ class "wrapper" ]
+                    [ div [ class "site-wrapper", attribute "style" "height: 100vh;" ]
+                        [ contents ]
+                    ]
                 ]
+            ]
+        ]
 
 
-logFilters : Html msg
+logFilters : Html Msg
 logFilters =
     div [ class "ui segment" ]
         [ div [ class "ui form" ]
@@ -274,7 +290,7 @@ logFilters =
         ]
 
 
-logViewPageHeader : Html msg
+logViewPageHeader : Html Msg
 logViewPageHeader =
     header [ class "ui top menu" ]
         [ div [ class "item" ]
@@ -312,7 +328,7 @@ logViewPageHeader =
         ]
 
 
-tableItem : Log -> Html msg
+tableItem : Log -> Html Msg
 tableItem log =
     tr []
         [ td [ class "collapsing" ]
@@ -334,13 +350,13 @@ tableItem log =
         ]
 
 
-tagButton : String -> Html msg
+tagButton : String -> Html Msg
 tagButton t =
     button [ class "ui mini blue label" ]
         [ text t ]
 
 
-logsView : List Log -> Html msg
+logsView : List Log -> Html Msg
 logsView logs =
     table [ class "ui celled striped table" ]
         [ thead []
