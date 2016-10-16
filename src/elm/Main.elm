@@ -1,21 +1,24 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.Events exposing (..)
 import Html.Attributes exposing (attribute, class, href, src, name, type', placeholder)
-import Html.App as App
 import Http
 import Task
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
-
-
---"http://ekmlogger.ekmpowershop.com"
--- "http://localhost:49851/logs"
+import Navigation exposing (..)
+import String
 
 
 serverAPI : String
 serverAPI =
     "http://localhost:9000/logs"
+
+
+
+--"http://ekmlogger.ekmpowershop.com"
+-- "http://localhost:49851/logs"
 
 
 type alias Response =
@@ -66,26 +69,45 @@ type alias Log =
 
 
 type alias Model =
-    { error : Maybe String
+    { page : Page
+    , error : Maybe String
     , logs : List Log
     }
 
 
-initModel : Model
-initModel =
-    { error = Nothing
+initModel : Page -> Model
+initModel page =
+    { page = page
+    , error = Nothing
     , logs = []
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, (fetchLogs serverAPI) )
+init : Page -> ( Model, Cmd Msg )
+init page =
+    ( initModel page, (fetchLogs serverAPI) )
 
 
 type Msg
     = Logs Response
+    | Navigate Page
     | Fail Http.Error
+
+
+toHash : Page -> String
+toHash page =
+    case page of
+        LogsMonitor ->
+            "#"
+
+        LogsList ->
+            "#logs"
+
+        Docs ->
+            "#docs"
+
+        NotFound ->
+            "#notfound"
 
 
 
@@ -101,6 +123,18 @@ update msg model =
         Fail error ->
             ( { model | error = Just (toString error) }, Cmd.none )
 
+        Navigate page ->
+            ( model, newUrl (toHash page) )
+
+
+
+-- urlUpdate
+
+
+urlUpdate : Page -> Model -> ( Model, Cmd Msg )
+urlUpdate page model =
+    ( { model | page = page }, Cmd.none )
+
 
 
 -- view
@@ -110,16 +144,28 @@ view : Model -> Html Msg
 view model =
     case model.error of
         Nothing ->
-            viewSiteWrapper
-                (div
-                    []
-                    [ logViewPageHeader
-                    , logFilters
-                    , logsView
-                        model.logs
-                    , logViewFooter
-                    ]
-                )
+            case model.page of
+                LogsMonitor ->
+                    div []
+                        [ viewLogsList model ]
+
+                LogsList ->
+                    div []
+                        [ viewLogsList model ]
+
+                Docs ->
+                    viewSiteWrapper
+                        (div []
+                            [ logViewPageHeader
+                            , viewDocs model
+                            ]
+                        )
+
+                NotFound ->
+                    div []
+                        [ logViewPageHeader
+                        , viewNotFound
+                        ]
 
         _ ->
             viewSiteWrapper
@@ -127,10 +173,36 @@ view model =
                     []
                     [ logViewPageHeader
                     , div [ class "ui middle message aligned center aligned grid error" ]
-                        [ text ("Houston, we have a problem: " ++ (Maybe.withDefault "" model.error) ++ " has occured.") ]
+                        [ text <| "Houston, we have a problem: " ++ (Maybe.withDefault "" model.error) ++ " has occured." ]
                     , logViewFooter
                     ]
                 )
+
+
+viewDocs : Model -> Html Msg
+viewDocs model =
+    div
+        []
+        [ text "Documentation" ]
+
+
+viewNotFound : Html Msg
+viewNotFound =
+    div [] [ text "Oops, we couldn't find what you were looking for" ]
+
+
+viewLogsList : Model -> Html Msg
+viewLogsList model =
+    viewSiteWrapper
+        (div
+            []
+            [ logViewPageHeader
+            , logFilters
+            , logsView
+                model.logs
+            , logViewFooter
+            ]
+        )
 
 
 viewSiteWrapper : Html Msg -> Html Msg
@@ -321,16 +393,16 @@ logViewPageHeader : Html Msg
 logViewPageHeader =
     header [ class "ui top menu" ]
         [ div [ class "item" ]
-            [ a [ href "#/" ]
+            [ a [ onClick (Navigate LogsMonitor) ]
                 [ img [ attribute "height" "26", src "../static/img/logo.svg" ]
                     []
                 ]
             ]
-        , a [ class "item", href "#/monitor" ]
+        , a [ class "item", onClick (Navigate LogsMonitor) ]
             [ text "Monitor" ]
-        , a [ class "item", href "#/logs" ]
+        , a [ class "item", onClick (Navigate LogsList) ]
             [ text "Logs" ]
-        , a [ class "item", href "#/docs" ]
+        , a [ class "item", onClick (Navigate Docs) ]
             [ text "Docs" ]
         , div [ class "borderless right menu" ]
             [ div [ class "ui dropdown item", attribute "style" "min-width: 180px;", attribute "tabindex" "0" ]
@@ -371,7 +443,7 @@ tableItem log =
         , td []
             [ text log.message ]
         , td [ class "collapsing" ]
-            [ a [ class "ui mini primary button", href ("#/logs/" ++ (toString log.id)) ]
+            [ a [ class "ui mini primary button", href <| "#/logs/" ++ (toString log.id) ]
                 [ text "Details" ]
             ]
         ]
@@ -417,11 +489,47 @@ subscriptions model =
     Sub.none
 
 
+type Page
+    = LogsMonitor
+    | LogsList
+    | Docs
+    | NotFound
+
+
+locationParser : Location -> Page
+locationParser location =
+    let
+        _ =
+            Debug.log "location: " location
+
+        hash =
+            (String.dropLeft 1 location.hash)
+    in
+        case hash of
+            "" ->
+                LogsMonitor
+
+            "monitor" ->
+                LogsMonitor
+
+            "logs" ->
+                LogsList
+
+            "docs" ->
+                Docs
+
+            _ ->
+                NotFound
+
+
 main : Program Never
 main =
-    App.program
-        { init = init
+    Navigation.program (makeParser locationParser)
+        { init =
+            init
         , update = update
         , view = view
         , subscriptions = subscriptions
+        , urlUpdate =
+            urlUpdate
         }
