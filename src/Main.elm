@@ -9,6 +9,7 @@ import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Navigation exposing (..)
 import String
+import Components.Docs.View exposing (..)
 
 
 serverAPI : String
