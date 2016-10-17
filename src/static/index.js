@@ -4,5 +4,5 @@ require( './styles/main.scss' );
 // require( '../../node_modules/bootstrap-sass/assets/javascripts/bootstrap.js' );   // <--- remove if Bootstrap's JS not needed
 
 // inject bundled Elm app into div#main
-var Elm = require( '../elm/Main' );
+var Elm = require( '../Main' );
 Elm.Main.embed( document.getElementById( 'main' ) );

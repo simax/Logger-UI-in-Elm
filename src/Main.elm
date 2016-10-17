@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.App as App
 import Html.Events exposing (..)
 import Html.Attributes exposing (attribute, class, href, src, name, type', placeholder)
 import Http
@@ -9,7 +10,9 @@ import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Navigation exposing (..)
 import String
-import Components.Docs.View exposing (..)
+import Docs.View
+import Docs.Types
+import Docs.State
 
 
 serverAPI : String
@@ -73,6 +76,7 @@ type alias Model =
     { page : Page
     , error : Maybe String
     , logs : List Log
+    , docs : Docs.Types.Model
     }
 
 
@@ -81,6 +85,7 @@ initModel page =
     { page = page
     , error = Nothing
     , logs = []
+    , docs = Docs.State.initModel
     }
 
 
@@ -93,6 +98,7 @@ type Msg
     = Logs Response
     | Navigate Page
     | Fail Http.Error
+    | DocsMsg Docs.Types.Msg
 
 
 toHash : Page -> String
@@ -127,6 +133,14 @@ update msg model =
         Navigate page ->
             ( model, newUrl (toHash page) )
 
+        DocsMsg docsMsg ->
+            ( { model
+                | docs =
+                    Docs.State.update docsMsg model.docs
+              }
+            , Cmd.none
+            )
+
 
 
 -- urlUpdate
@@ -158,7 +172,7 @@ view model =
                     viewSiteWrapper
                         (div []
                             [ logViewPageHeader
-                            , viewDocs model
+                            , App.map DocsMsg (Docs.View.view model.docs)
                             ]
                         )
 
