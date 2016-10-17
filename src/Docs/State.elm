@@ -17,5 +17,14 @@ update msg model =
         Content DotNetExample ->
             { model | content = DotNetExample }
 
-        _ ->
-            model
+        Content ClassicAspClient ->
+            { model | content = ClassicAspClient }
+
+        Content ClassicAspExample ->
+            { model | content = ClassicAspExample }
+
+        Content JavascriptClient ->
+            { model | content = JavascriptClient }
+
+        Content JavascriptExample ->
+            { model | content = JavascriptExample }
