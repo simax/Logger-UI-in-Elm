@@ -17,12 +17,13 @@ import Docs.State
 
 serverAPI : String
 serverAPI =
-    "http://localhost:9000/logs"
+    "http://localhost:49851/logs"
 
 
 
+--"http://localhost:9000/logs"
 --"http://ekmlogger.ekmpowershop.com"
--- "http://localhost:49851/logs"
+--"http://localhost:49851/logs"
 
 
 type alias Response =
@@ -134,12 +135,12 @@ update msg model =
             ( model, newUrl (toHash page) )
 
         DocsMsg docsMsg ->
-            ( { model
-                | docs =
-                    Docs.State.update docsMsg model.docs
-              }
-            , Cmd.none
-            )
+            --let
+            --    ( docModel, docMsg ) =
+            --        Docs.State.update docsMsg model.docs
+            --in
+            --    ( { model | docs = docModel }, App.map docMsg msg )
+            ( model, Cmd.none )
 
 
 

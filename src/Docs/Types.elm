@@ -1,9 +1,15 @@
 module Docs.Types exposing (..)
 
+import Http
+
 
 type alias Model =
-    { content : DocContent
+    { content : String
     }
+
+
+type alias Documentation =
+    String
 
 
 type
@@ -23,4 +29,6 @@ type
 
 
 type Msg
-    = Content DocContent
+    = Documentation String
+    | Content DocContent
+    | Fail Http.Error

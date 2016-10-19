@@ -1,30 +1,52 @@
 module Docs.State exposing (..)
 
+import Http
+import Task
 import Docs.Types exposing (..)
 
 
 initModel : Model
 initModel =
-    { content = DotNetClient }
+    { content = "" }
 
 
-update : Msg -> Model -> Model
+fetchContent : String -> Cmd Msg
+fetchContent url =
+    let
+        task =
+            Http.getString url
+
+        cmd =
+            Task.perform Fail Documentation task
+    in
+        cmd
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Content DotNetClient ->
-            { model | content = DotNetClient }
+        Documentation content ->
+            ( { model | content = content }, Cmd.none )
 
-        Content DotNetExample ->
-            { model | content = DotNetExample }
+        Fail error ->
+            ( { model | content = (toString error) }, Cmd.none )
 
-        Content ClassicAspClient ->
-            { model | content = ClassicAspClient }
+        Content contentType ->
+            case contentType of
+                DotNetClient ->
+                    ( model, fetchContent "/markdown/dot_net/client.md" )
 
-        Content ClassicAspExample ->
-            { model | content = ClassicAspExample }
+                DotNetExample ->
+                    ( model, fetchContent "" )
 
-        Content JavascriptClient ->
-            { model | content = JavascriptClient }
+                ClassicAspClient ->
+                    ( model, fetchContent "" )
 
-        Content JavascriptExample ->
-            { model | content = JavascriptExample }
+                ClassicAspExample ->
+                    ( model, fetchContent "" )
+
+                JavascriptClient ->
+                    ( model, fetchContent "" )
+
+                JavascriptExample ->
+                    ( model, fetchContent "" )

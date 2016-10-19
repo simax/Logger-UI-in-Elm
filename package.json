@@ -9,8 +9,8 @@
     "url": "https://github.com/moarwick/elm-webpack-starter"
   },
   "scripts": {
-    "start": "webpack-dev-server --hot --inline --content-base src/",
     "build": "rimraf dist && webpack",
+    "start": "webpack-dev-server --hot --inline --content-base src/",
     "watch": "webpack --watch"
   },
   "devDependencies": {
@@ -34,5 +34,8 @@
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
     "webpack-merge": "^0.14.1"
+  },
+  "dependencies": {
+    "highlightjs": "^8.7.0"
   }
 }
