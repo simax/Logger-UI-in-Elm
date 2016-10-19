@@ -26,7 +26,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Documentation content ->
-            ( { model | content = content }, Cmd.none )
+            let
+                _ =
+                    Debug.log "content" content
+            in
+                ( { model | content = content }, Cmd.none )
 
         Fail error ->
             ( { model | content = (toString error) }, Cmd.none )
@@ -34,7 +38,14 @@ update msg model =
         Content contentType ->
             case contentType of
                 DotNetClient ->
-                    ( model, fetchContent "/markdown/dot_net/client.md" )
+                    let
+                        url =
+                            "http://localhost:8080/static/markdown/dot_net/client.md"
+
+                        _ =
+                            Debug.log "fetchContent" url
+                    in
+                        ( model, fetchContent url )
 
                 DotNetExample ->
                     ( model, fetchContent "" )

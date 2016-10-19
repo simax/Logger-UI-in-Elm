@@ -14,32 +14,33 @@ view model =
                 [ div [ class "two wide column" ]
                     [ sidebar ]
                 , div [ class "twelve wide stretched column" ]
-                    [ content model ]
+                    [ text model.content ]
                 ]
             ]
         ]
 
 
-content : Model -> Html Msg
-content model =
-    case model.content of
-        DotNetClient ->
-            viewDotNetClient
 
-        DotNetExample ->
-            viewDotNetExample
-
-        ClassicAspClient ->
-            viewClassicAspClient
-
-        ClassicAspExample ->
-            viewClassicAspExample
-
-        JavascriptClient ->
-            viewJavascriptClient
-
-        JavascriptExample ->
-            viewJavascriptExample
+-- content : Model -> Html Msg
+-- content model =
+--     case model.content of
+--         DotNetClient ->
+--             viewDotNetClient
+--
+--         DotNetExample ->
+--             viewDotNetExample
+--
+--         ClassicAspClient ->
+--             viewClassicAspClient
+--
+--         ClassicAspExample ->
+--             viewClassicAspExample
+--
+--         JavascriptClient ->
+--             viewJavascriptClient
+--
+--         JavascriptExample ->
+--             viewJavascriptExample
 
 
 viewBlank : Html Msg
