@@ -26,38 +26,30 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Documentation content ->
-            let
-                _ =
-                    Debug.log "content" content
-            in
-                ( { model | content = content }, Cmd.none )
+            ( { model | content = content }, Cmd.none )
 
         Fail error ->
             ( { model | content = (toString error) }, Cmd.none )
 
         Content contentType ->
             case contentType of
-                DotNetClient ->
-                    let
-                        url =
-                            "http://localhost:8080/static/markdown/dot_net/client.md"
+                DocsHome ->
+                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/examples.md" )
 
-                        _ =
-                            Debug.log "fetchContent" url
-                    in
-                        ( model, fetchContent url )
+                DotNetClient ->
+                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/client.md" )
 
                 DotNetExample ->
-                    ( model, fetchContent "" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/examples.md" )
 
                 ClassicAspClient ->
-                    ( model, fetchContent "" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/classic_asp/client.md" )
 
                 ClassicAspExample ->
-                    ( model, fetchContent "" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/classic_asp/examples.md" )
 
                 JavascriptClient ->
-                    ( model, fetchContent "" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/javascript/client.md" )
 
                 JavascriptExample ->
-                    ( model, fetchContent "" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/javascript/examples.md" )

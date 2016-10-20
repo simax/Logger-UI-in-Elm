@@ -17,7 +17,7 @@ import Docs.State
 
 serverAPI : String
 serverAPI =
-    "http://localhost:9000/logs"
+    "http://localhost:49851/logs"
 
 
 
@@ -136,19 +136,10 @@ update msg model =
 
         DocsMsg docsMsg ->
             let
-                ( docModel, docMsg ) =
+                ( docsModel, cmd ) =
                     Docs.State.update docsMsg model.docs
-
-                _ =
-                    Debug.log "docModel:" (toString docModel)
             in
-                ( { model | docs = docModel }, Cmd.none )
-
-
-
--- ( model, Cmd.none )
--- ( model, Cmd.none )
--- urlUpdate
+                ( { model | docs = docsModel }, Cmd.map DocsMsg cmd )
 
 
 urlUpdate : Page -> Model -> ( Model, Cmd Msg )

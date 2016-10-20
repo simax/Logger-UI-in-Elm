@@ -15,7 +15,9 @@ type alias Documentation =
 type
     DocContent
     -- "#/docs/dot_net/client"
-    = DotNetClient
+    = DocsHome
+      -- "#/docs/hoeme.md"
+    | DotNetClient
       -- "#/docs/dot_net/examples"
     | DotNetExample
       -- "#/docs/classic_asp/client"
