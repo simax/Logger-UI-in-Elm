@@ -12,21 +12,13 @@ type alias Documentation =
     String
 
 
-type
-    DocContent
-    -- "#/docs/dot_net/client"
+type DocContent
     = DocsHome
-      -- "#/docs/hoeme.md"
     | DotNetClient
-      -- "#/docs/dot_net/examples"
     | DotNetExample
-      -- "#/docs/classic_asp/client"
     | ClassicAspClient
-      -- "#/docs/classic_asp/examples"
     | ClassicAspExample
-      -- "#/docs/javascript/client"
     | JavascriptClient
-      -- "#/docs/javascript/examples"
     | JavascriptExample
 
 
