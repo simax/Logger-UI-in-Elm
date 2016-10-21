@@ -536,11 +536,9 @@ locationParser location =
 main : Program Never
 main =
     Navigation.program (makeParser locationParser)
-        { init =
-            init
+        { init = init
         , update = update
         , view = view
         , subscriptions = subscriptions
-        , urlUpdate =
-            urlUpdate
+        , urlUpdate = urlUpdate
         }
