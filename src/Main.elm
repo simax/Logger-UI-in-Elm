@@ -17,7 +17,7 @@ import Docs.State
 
 serverAPI : String
 serverAPI =
-    "http://localhost:49851/logs"
+    "http://localhost:9000/logs"
 
 
 
@@ -90,9 +90,16 @@ initModel page =
     }
 
 
+initDocContent : Cmd Msg
+initDocContent =
+    Docs.State.fetchInitialContent |> (Cmd.map DocsMsg)
+
+
 init : Page -> ( Model, Cmd Msg )
 init page =
-    ( initModel page, (fetchLogs serverAPI) )
+    ( initModel page
+    , Cmd.batch [ (fetchLogs serverAPI), initDocContent ]
+    )
 
 
 type Msg

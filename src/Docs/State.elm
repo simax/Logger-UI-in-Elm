@@ -10,6 +10,11 @@ initModel =
     { content = "" }
 
 
+fetchInitialContent : Cmd Msg
+fetchInitialContent =
+    "http://localhost:8080/static/markdown/home.md" |> fetchContent
+
+
 fetchContent : String -> Cmd Msg
 fetchContent url =
     let
