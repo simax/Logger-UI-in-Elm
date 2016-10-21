@@ -4,6 +4,16 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (attribute, alt, class, href, src, name, type', placeholder, id)
 import Docs.Types exposing (..)
+import Markdown
+
+
+-- defaultOptions : Markdown.Options
+-- defaultOptions =
+--     { githubFlavored = Just { tables = False, breaks = False }
+--     , defaultHighlighting = Nothing
+--     , sanitize = False
+--     , smartypants = False
+--     }
 
 
 view : Model -> Html Msg
@@ -14,7 +24,11 @@ view model =
                 [ div [ class "two wide column" ]
                     [ sidebar ]
                 , div [ class "twelve wide stretched column" ]
-                    [ text model.content ]
+                    [ div [ class "ui raised blue segment" ]
+                        [ div []
+                            [ (Markdown.toHtml [] model.content) ]
+                        ]
+                    ]
                 ]
             ]
         ]
@@ -24,7 +38,7 @@ sidebar : Html Msg
 sidebar =
     div [ class "ui vertical fluid menu" ]
         [ div [ class "item" ]
-            [ a [ class "header", onClick (Content DocsHome) ]
+            [ a [ class "header active", onClick (Content DocsHome) ]
                 [ text "EKM Logger" ]
             ]
         , div [ class "item" ]

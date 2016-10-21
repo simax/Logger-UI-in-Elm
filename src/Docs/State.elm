@@ -34,7 +34,7 @@ update msg model =
         Content contentType ->
             case contentType of
                 DocsHome ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/examples.md" )
+                    ( model, fetchContent "http://localhost:8080/static/markdown/home.md" )
 
                 DotNetClient ->
                     ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/client.md" )
