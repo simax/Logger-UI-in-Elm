@@ -5,6 +5,11 @@ import Task
 import Docs.Types exposing (..)
 
 
+host : String
+host =
+    "http://localhost:8080/"
+
+
 initModel : Model
 initModel =
     { content = "" }
@@ -29,14 +34,8 @@ fetchInitialContent =
 
 fetchContent : String -> Cmd Msg
 fetchContent url =
-    let
-        task =
-            Http.getString url
-
-        cmd =
-            Task.perform Fail SetDocumentContent task
-    in
-        cmd
+    Http.getString (host ++ url)
+        |> Task.perform Fail SetDocumentContent
 
 
 getDocumentationByType : DocType -> Cmd Msg

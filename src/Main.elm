@@ -279,56 +279,7 @@ logFilters =
                                     ]
                                 ]
                             , div [ class "field" ]
-                                [ div [ class "ui fluid multiple search selection dropdown" ]
-                                    [ input [ name "tags", type' "hidden", Html.Attributes.value "" ]
-                                        []
-                                    , i [ class "dropdown icon" ]
-                                        []
-                                    , input [ class "search", attribute "tabindex" "0", type' "text" ]
-                                        []
-                                    , span [ class "sizer" ]
-                                        []
-                                    , div [ class "default text" ]
-                                        [ text "Tags" ]
-                                    , div [ class "menu", attribute "tabindex" "-1" ]
-                                        [ div [ class "item", attribute "data-value" "aaaa" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "aaaa"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "bbbb" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "bbbb"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "cccc" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "cccc"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "dddd" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "dddd"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "query" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "query"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "request" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "request"
-                                            ]
-                                        , div [ class "item", attribute "data-value" "sqlite" ]
-                                            [ i [ class "blue circle icon" ]
-                                                []
-                                            , text "sqlite"
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                [ tagsDropDownList ]
                             ]
                         , div [ class "inline fields" ]
                             [ div [ class "field" ]
@@ -549,3 +500,56 @@ main =
         , subscriptions = subscriptions
         , urlUpdate = urlUpdate
         }
+
+
+tagsDropDownList : Html Msg
+tagsDropDownList =
+    div [ class "ui fluid multiple search selection dropdown" ]
+        [ input [ name "tags", type' "hidden", Html.Attributes.value "" ]
+            []
+        , i [ class "dropdown icon" ]
+            []
+        , input [ class "search", attribute "tabindex" "0", type' "text" ]
+            []
+        , span [ class "sizer" ]
+            []
+        , div [ class "default text" ]
+            [ text "Tags" ]
+        , div [ class "menu transition visible", attribute "tabindex" "-1" ]
+            [ div [ class "item", attribute "data-value" "aaaa" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "aaaa"
+                ]
+            , div [ class "item", attribute "data-value" "bbbb" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "bbbb"
+                ]
+            , div [ class "item", attribute "data-value" "cccc" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "cccc"
+                ]
+            , div [ class "item", attribute "data-value" "dddd" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "dddd"
+                ]
+            , div [ class "item", attribute "data-value" "query" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "query"
+                ]
+            , div [ class "item", attribute "data-value" "request" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "request"
+                ]
+            , div [ class "item", attribute "data-value" "sqlite" ]
+                [ i [ class "blue circle icon" ]
+                    []
+                , text "sqlite"
+                ]
+            ]
+        ]

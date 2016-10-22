@@ -31,13 +31,13 @@ type alias DocInfo =
 
 documents : List DocInfo
 documents =
-    [ DocInfo DocsHome "" "http://localhost:8080/static/markdown/home.md"
-    , DocInfo DotNetClient "" "http://localhost:8080/static/markdown/dot_net/client.md"
-    , DocInfo DotNetExample "" "http://localhost:8080/static/markdown/dot_net/examples.md"
-    , DocInfo ClassicAspClient "" "http://localhost:8080/static/markdown/classic_asp/client.md"
-    , DocInfo ClassicAspExample "" "http://localhost:8080/static/markdown/classic_asp/examples.md"
-    , DocInfo JavascriptClient "" "http://localhost:8080/static/markdown/javascript/client.md"
-    , DocInfo JavascriptExample "" "http://localhost:8080/static/markdown/javascript/examples.md"
+    [ DocInfo DocsHome "" "static/markdown/home.md"
+    , DocInfo DotNetClient "" "static/markdown/dot_net/client.md"
+    , DocInfo DotNetExample "" "static/markdown/dot_net/examples.md"
+    , DocInfo ClassicAspClient "" "static/markdown/classic_asp/client.md"
+    , DocInfo ClassicAspExample "" "static/markdown/classic_asp/examples.md"
+    , DocInfo JavascriptClient "" "static/markdown/javascript/client.md"
+    , DocInfo JavascriptExample "" "static/markdown/javascript/examples.md"
     ]
 
 
