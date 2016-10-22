@@ -10,9 +10,21 @@ initModel =
     { content = "" }
 
 
+getDoc : Maybe DocInfo -> Cmd Msg
+getDoc docInfo =
+    case docInfo of
+        Just { docType, docHash, url } ->
+            fetchContent url
+
+        Nothing ->
+            Cmd.none
+
+
 fetchInitialContent : Cmd Msg
 fetchInitialContent =
-    "http://localhost:8080/static/markdown/home.md" |> fetchContent
+    documents
+        |> List.head
+        |> getDoc
 
 
 fetchContent : String -> Cmd Msg
@@ -22,39 +34,30 @@ fetchContent url =
             Http.getString url
 
         cmd =
-            Task.perform Fail Documentation task
+            Task.perform Fail SetDocumentContent task
     in
         cmd
+
+
+getDocumentationByType : DocType -> Cmd Msg
+getDocumentationByType docType =
+    List.filter (\doc -> doc.docType == docType) documents
+        |> List.head
+        |> getDoc
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Documentation content ->
-            ( { model | content = content }, Cmd.none )
-
         Fail error ->
             ( { model | content = (toString error) }, Cmd.none )
 
-        Content contentType ->
-            case contentType of
-                DocsHome ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/home.md" )
+        SetDocumentContent content ->
+            ( { model | content = content }, Cmd.none )
 
-                DotNetClient ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/client.md" )
-
-                DotNetExample ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/dot_net/examples.md" )
-
-                ClassicAspClient ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/classic_asp/client.md" )
-
-                ClassicAspExample ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/classic_asp/examples.md" )
-
-                JavascriptClient ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/javascript/client.md" )
-
-                JavascriptExample ->
-                    ( model, fetchContent "http://localhost:8080/static/markdown/javascript/examples.md" )
+        Content docType ->
+            let
+                _ =
+                    Debug.log "DocType:" docType
+            in
+                ( model, (getDocumentationByType docType) )
